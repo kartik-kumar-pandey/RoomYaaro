@@ -40,7 +40,15 @@ const limiter = rateLimit({
   message: { success: false, message: 'Too many requests, please try again later.' },
 });
 app.use('/api', limiter);
-
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    name: 'Rent & Flatmate Finder API',
+    version: '1.0.0',
+    status: 'Running 🚀',
+    documentation: '/api/health',
+  });
+});
 app.get('/api/health', (req, res) => {
   res.json({ success: true, message: 'Rent & Flatmate Finder API is running' });
 });
