@@ -20,18 +20,23 @@ export const getListings = asyncHandler(async (req, res) => {
     maxRent,
     roomType,
     furnishing,
-    keyword,
     sort = 'newest',
-    page = 1,
-    limit = 12,
   } = req.query;
+
+  // Sanitize and cap user-supplied pagination/search params
+  const rawKeyword = typeof req.query.keyword === 'string' ? req.query.keyword.slice(0, 100) : undefined;
+  const keyword = rawKeyword || undefined;
+  const page = Math.max(1, parseInt(req.query.page) || 1);
+  const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 12));
 
   const where = {
     status: 'AVAILABLE',
     isDeleted: false,
-    ...(location && { location: { contains: location, mode: 'insensitive' } }),
-    ...(minRent && { rent: { gte: parseFloat(minRent) } }),
-    ...(maxRent && { rent: { ...(minRent ? { gte: parseFloat(minRent) } : {}), lte: parseFloat(maxRent) } }),
+    ...(location && { location: { contains: location.slice(0, 100), mode: 'insensitive' } }),
+    ...(minRent && !isNaN(parseFloat(minRent)) && { rent: { gte: parseFloat(minRent) } }),
+    ...(maxRent && !isNaN(parseFloat(maxRent)) && {
+      rent: { ...(minRent ? { gte: parseFloat(minRent) } : {}), lte: parseFloat(maxRent) },
+    }),
     ...(roomType && { roomType }),
     ...(furnishing && { furnishingStatus: furnishing }),
     ...(keyword && {
@@ -49,14 +54,14 @@ export const getListings = asyncHandler(async (req, res) => {
     newest: { createdAt: 'desc' },
   }[sort] || { createdAt: 'desc' };
 
-  const skip = (parseInt(page) - 1) * parseInt(limit);
+  const skip = (page - 1) * limit;
 
   const [listings, total] = await Promise.all([
     prisma.roomListing.findMany({
       where,
       orderBy,
       skip,
-      take: parseInt(limit),
+      take: limit,
       include: {
         photos: { orderBy: { order: 'asc' } },
         owner: { select: { id: true, name: true } },
@@ -69,9 +74,9 @@ export const getListings = asyncHandler(async (req, res) => {
     listings,
     pagination: {
       total,
-      page: parseInt(page),
-      limit: parseInt(limit),
-      pages: Math.ceil(total / parseInt(limit)),
+      page,
+      limit,
+      pages: Math.ceil(total / limit),
     },
   });
 });

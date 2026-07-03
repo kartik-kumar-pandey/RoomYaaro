@@ -56,7 +56,7 @@ const Register = () => {
       <div className="min-h-[calc(100vh-4rem)] flex">
 
         {/* Left decorative panel */}
-        <div className="hidden lg:flex flex-col justify-between w-[42%] relative overflow-hidden p-12"
+        <div className="hidden lg:flex flex-col justify-between w-[42%] relative overflow-hidden p-12 keep-dark"
           style={{ background: 'linear-gradient(145deg, #0a0e1f 0%, #0f172a 40%, #0d1526 100%)' }}>
           <div className="absolute inset-0 bg-grid-pattern bg-grid opacity-100 pointer-events-none" />
           <div className="absolute top-1/3 right-1/4 w-72 h-72 rounded-full pointer-events-none"
@@ -67,11 +67,9 @@ const Register = () => {
           <div className="relative z-10">
             <Link to="/" className="flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-xl bg-primary-500 flex items-center justify-center">
-                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth="1.8">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                </svg>
+                <img src="/logo.png" alt="RoomYaaro Logo" className="w-full h-full object-cover rounded-xl" />
               </div>
-              <span className="font-bold text-xl text-white">Rent<span className="text-primary-400">Finder</span></span>
+              <span className="font-bold text-xl text-white">Room<span className="text-primary-400">Yaaro</span></span>
             </Link>
           </div>
 

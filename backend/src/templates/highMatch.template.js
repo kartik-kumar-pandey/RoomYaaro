@@ -38,7 +38,7 @@ font-weight:700;
 color:#1D4ED8;
 margin-bottom:6px;
 ">
-⭐ Compatibility Score: ${compatibilityScore}% Match
+⭐ RoomYaaro Match™: ${compatibilityScore}% Compatible
 </div>
 
 <div

@@ -2,7 +2,7 @@ import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
 
 const DashboardLayout = ({ children }) => (
-  <div className="min-h-screen bg-slate-950">
+  <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
     <Navbar />
     <div className="flex">
       <Sidebar />

@@ -36,16 +36,17 @@ export const baseTemplate = ({ title, preview, content }) => `
   <div class="wrapper">
     <div class="container">
       <div class="header">
-        <h1 class="logo-text">🏠 Rent<span>Finder</span></h1>
+        <h1 class="logo-text">🏠 Room<span>Yaaro</span></h1>
+        <p style="margin: 4px 0 0 0; font-size: 12px; color: #9CA3AF; letter-spacing: 0.5px;">Find Your Room. Find Your Yaar.</p>
       </div>
       <div class="content">
         ${content}
       </div>
       <div class="footer">
-        <p class="footer-text">Sent by RentFinder. Find your perfect room & flatmate.</p>
-        <p class="footer-text">© ${new Date().getFullYear()} RentFinder. All rights reserved.</p>
+        <p class="footer-text">Sent by RoomYaaro &mdash; Find Your Room. Find Your Yaar.</p>
+        <p class="footer-text">© ${new Date().getFullYear()} RoomYaaro. All rights reserved.</p>
         <p class="footer-text">
-          <a href="#" class="footer-link">Help Center</a> • 
+          <a href="mailto:support@roomyaaro.com" class="footer-link">support@roomyaaro.com</a> • 
           <a href="#" class="footer-link">Privacy Policy</a>
         </p>
       </div>

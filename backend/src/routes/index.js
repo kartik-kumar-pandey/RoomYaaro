@@ -6,7 +6,6 @@ import compatibilityRoutes from './compatibility.routes.js';
 import interestRoutes from './interest.routes.js';
 import chatRoutes from './chat.routes.js';
 import adminRoutes from './admin.routes.js';
-import testEmailRoute from './testEmail.route.js';
 
 const router = Router();
 
@@ -17,6 +16,8 @@ router.use('/compatibility', compatibilityRoutes);
 router.use('/interest', interestRoutes);
 router.use('/chat', chatRoutes);
 router.use('/admin', adminRoutes);
-router.use('/test-email', testEmailRoute);
+
+// NOTE: /test-email route removed — test utilities must NEVER be exposed in production.
+// Use the email service directly in integration tests with a mock transporter.
 
 export default router;

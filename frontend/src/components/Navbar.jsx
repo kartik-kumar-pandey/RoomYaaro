@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useTheme } from '../contexts/ThemeContext';
 
 /* ── SVG Icon components ── */
 const HomeIcon = () => (
@@ -38,9 +39,20 @@ const XIcon = () => (
     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/>
   </svg>
 );
+const SunIcon = () => (
+  <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M12 7a5 5 0 100 10 5 5 0 000-10z" />
+  </svg>
+);
+const MoonIcon = () => (
+  <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+  </svg>
+);
 
 const Navbar = () => {
   const { user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
@@ -76,11 +88,11 @@ const Navbar = () => {
 
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2.5 group">
-              <div className="w-8 h-8 rounded-lg bg-primary-500 flex items-center justify-center shadow-glow group-hover:shadow-glow-lg transition-shadow duration-300">
-                <HomeIcon />
+              <div className="w-9 h-9 rounded-lg overflow-hidden flex items-center justify-center bg-white/5 border border-white/10 group-hover:border-primary-500/30 transition-all duration-300">
+                <img src="/logo.png" alt="RoomYaaro Logo" className="w-full h-full object-cover" />
               </div>
-              <span className="font-bold text-lg text-white tracking-tight">
-                Rent<span className="text-primary-400">Finder</span>
+              <span className="font-bold text-lg text-slate-800 dark:text-white tracking-tight">
+                Room<span className="text-primary-500 dark:text-primary-400">Yaaro</span>
               </span>
             </Link>
 
@@ -117,18 +129,27 @@ const Navbar = () => {
 
             {/* Right side */}
             <div className="hidden md:flex items-center gap-3">
+              {/* Theme Toggle Button */}
+              <button
+                onClick={toggleTheme}
+                className="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/5 transition-all duration-200"
+                aria-label="Toggle theme"
+              >
+                {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
+              </button>
+
               {user ? (
                 <>
-                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/8">
+                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-200/50 dark:bg-white/5 border border-slate-300 dark:border-white/8">
                     <div className="w-7 h-7 rounded-full bg-primary-500 flex items-center justify-center text-xs font-bold text-white">
                       {initials}
                     </div>
-                    <span className="text-sm text-slate-300 font-medium">{user.name?.split(' ')[0]}</span>
-                    <span className="text-xs text-slate-600 capitalize">{user.role.toLowerCase()}</span>
+                    <span className="text-sm text-slate-700 dark:text-slate-300 font-medium">{user.name?.split(' ')[0]}</span>
+                    <span className="text-xs text-slate-400 dark:text-slate-600 capitalize">{user.role.toLowerCase()}</span>
                   </div>
                   <button
                     onClick={handleLogout}
-                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-red-400 hover:bg-red-500/5 transition-all duration-200"
+                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-500/5 transition-all duration-200"
                   >
                     <LogoutIcon />
                     Logout
@@ -136,7 +157,7 @@ const Navbar = () => {
                 </>
               ) : (
                 <>
-                  <Link to="/login" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all duration-200">
+                  <Link to="/login" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/5 transition-all duration-200">
                     Sign In
                   </Link>
                   <Link to="/register" className="btn-primary py-2 px-4 text-sm">
@@ -158,31 +179,39 @@ const Navbar = () => {
 
         {/* Mobile menu */}
         {mobileOpen && (
-          <div className="md:hidden border-t border-white/8 bg-slate-950/95 backdrop-blur-xl animate-fade-in">
+          <div className="md:hidden border-t border-slate-200 dark:border-white/8 bg-slate-100 dark:bg-slate-950 backdrop-blur-xl animate-fade-in">
             <div className="px-4 py-4 space-y-1">
-              <Link to="/listings" className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-colors">
+              <Link to="/listings" className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/5 transition-colors">
                 <SearchIcon /> Browse Listings
               </Link>
               {user ? (
                 <>
-                  <Link to={dashboardLink} className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-colors">
+                  <Link to={dashboardLink} className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/5 transition-colors">
                     Dashboard
                   </Link>
                   {(user.role === 'TENANT' || user.role === 'OWNER') && (
-                    <Link to={`/${user.role.toLowerCase()}/chat`} className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-colors">
+                    <Link to={`/${user.role.toLowerCase()}/chat`} className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/5 transition-colors">
                       <ChatIcon /> Chat
                     </Link>
                   )}
-                  <div className="pt-2 border-t border-white/5 mt-2">
-                    <button onClick={handleLogout} className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-red-400 hover:bg-red-500/5 transition-colors">
+                  <div className="pt-2 border-t border-slate-200 dark:border-white/5 mt-2">
+                    <button onClick={toggleTheme} className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-white/5 transition-colors">
+                      {theme === 'dark' ? <SunIcon /> : <MoonIcon />} Toggle Theme ({theme})
+                    </button>
+                    <button onClick={handleLogout} className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-red-500 dark:text-red-400 hover:bg-red-500/5 transition-colors mt-1">
                       <LogoutIcon /> Sign Out
                     </button>
                   </div>
                 </>
               ) : (
-                <div className="flex gap-2 pt-2">
-                  <Link to="/login" className="flex-1 btn-secondary py-2.5 text-sm text-center">Sign In</Link>
-                  <Link to="/register" className="flex-1 btn-primary py-2.5 text-sm text-center">Get Started</Link>
+                <div className="pt-2 border-t border-slate-200 dark:border-white/5 mt-2 space-y-2">
+                  <button onClick={toggleTheme} className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-white/5 transition-colors">
+                    {theme === 'dark' ? <SunIcon /> : <MoonIcon />} Toggle Theme ({theme})
+                  </button>
+                  <div className="flex gap-2">
+                    <Link to="/login" className="flex-1 btn-secondary py-2.5 text-sm text-center">Sign In</Link>
+                    <Link to="/register" className="flex-1 btn-primary py-2.5 text-sm text-center">Get Started</Link>
+                  </div>
                 </div>
               )}
             </div>

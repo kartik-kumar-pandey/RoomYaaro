@@ -89,7 +89,7 @@ const Sidebar = () => {
   const roleLabels = { OWNER: 'Owner Portal', TENANT: 'Tenant Portal', ADMIN: 'Admin Panel' };
 
   return (
-    <aside className="w-64 min-h-[calc(100vh-4rem)] hidden lg:flex flex-col border-r border-white/6 bg-slate-950/60 backdrop-blur-xl">
+    <aside className="w-64 min-h-[calc(100vh-4rem)] hidden lg:flex flex-col border-r border-slate-200 dark:border-white/6 bg-slate-100/60 dark:bg-slate-950/60 backdrop-blur-xl">
       {/* Role badge */}
       <div className="px-5 pt-6 pb-3">
         <p className="section-label">{roleLabels[user?.role] || 'Menu'}</p>

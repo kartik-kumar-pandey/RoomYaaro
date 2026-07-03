@@ -62,7 +62,6 @@ const ParticleHero = () => {
       }
     }
 
-    // Draw connection lines between nearby particles
     const drawLines = (ps) => {
       for (let i = 0; i < ps.length; i++) {
         for (let j = i + 1; j < ps.length; j++) {
@@ -114,43 +113,58 @@ const ParticleHero = () => {
     <div ref={heroRef} className="relative cursor-pointer select-none" style={{ minHeight: '92vh' }}>
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
 
-      {/* Radial gradient overlay */}
+      {/* Multi-layer gradient overlay */}
       <div className="absolute inset-0 pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 40%, rgba(99,102,241,.10), transparent 70%)' }} />
+        style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 40%, rgba(99,102,241,.13), transparent 70%)' }} />
       <div className="absolute inset-0 pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse 50% 40% at 80% 70%, rgba(16,185,129,.06), transparent 70%)' }} />
+        style={{ background: 'radial-gradient(ellipse 50% 40% at 80% 70%, rgba(16,185,129,.07), transparent 70%)' }} />
+      <div className="absolute inset-0 pointer-events-none"
+        style={{ background: 'radial-gradient(ellipse 40% 30% at 20% 20%, rgba(139,92,246,.06), transparent 70%)' }} />
 
       {/* Hero content */}
-      <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 pt-28 pb-20">
+      <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 sm:px-8 pt-24 sm:pt-28 pb-16 sm:pb-20">
 
         {/* Eyebrow pill */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass border border-primary-500/20 text-primary-400 text-xs font-bold tracking-widest uppercase mb-8"
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass border border-primary-500/20 text-primary-400 text-xs font-bold tracking-widest uppercase mb-6 sm:mb-8"
           style={{ animation: 'fadeUp .6s .1s ease both' }}>
           <span className="w-1.5 h-1.5 rounded-full bg-primary-400 animate-pulse" />
-          AI-Powered Flatmate Matching
+          AI-Powered Room &amp; Flatmate Matching
         </div>
 
-        {/* Headline */}
-        <h1 className="text-5xl sm:text-6xl md:text-7xl font-black leading-none tracking-tight text-white mb-6"
-          style={{ animation: 'fadeUp .7s .25s ease both' }}>
-          Find Your<br />
-          <span className="gradient-text">Perfect Room</span>
-          <br />& Flatmate
+        {/* Main headline */}
+        <h1
+          className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-none tracking-tight text-white mb-3 sm:mb-4"
+          style={{ animation: 'fadeUp .7s .25s ease both' }}
+        >
+          RoomYaaro
         </h1>
 
+        {/* Tagline */}
+        <h2
+          className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-300 mb-5 sm:mb-6"
+          style={{ animation: 'fadeUp .7s .3s ease both' }}
+        >
+          Find Your Room.{' '}
+          <span className="gradient-text">Find Your Yaar.</span>
+        </h2>
+
         {/* Subtext */}
-        <p className="text-lg text-slate-400 max-w-xl leading-relaxed mb-10"
-          style={{ animation: 'fadeUp .7s .4s ease both' }}>
-          Our Gemini-powered compatibility engine scores every match in seconds —
+        <p
+          className="text-base sm:text-lg text-slate-400 max-w-md sm:max-w-xl leading-relaxed mb-8 sm:mb-10 px-2"
+          style={{ animation: 'fadeUp .7s .4s ease both' }}
+        >
+          Our AI-powered compatibility engine matches rooms and roommates in seconds —
           real-time chat unlocks the moment you connect.
         </p>
 
         {/* CTA buttons */}
-        <div className="flex flex-wrap items-center justify-center gap-4 mb-16"
-          style={{ animation: 'fadeUp .7s .55s ease both' }}>
+        <div
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-12 sm:mb-16 w-full max-w-xs sm:max-w-none"
+          style={{ animation: 'fadeUp .7s .55s ease both' }}
+        >
           <Link
             to="/register"
-            className="btn-primary px-8 py-3.5 text-base"
+            className="btn-primary px-8 py-3.5 text-base w-full sm:w-auto text-center"
             style={{ animation: 'pulseGlow 3s ease-in-out infinite' }}
           >
             Get Started Free
@@ -160,7 +174,7 @@ const ParticleHero = () => {
           </Link>
           <Link
             to="/listings"
-            className="btn-secondary px-8 py-3.5 text-base"
+            className="btn-secondary px-8 py-3.5 text-base w-full sm:w-auto text-center"
           >
             Browse Rooms
           </Link>
@@ -169,9 +183,9 @@ const ParticleHero = () => {
         {/* Stats row */}
         <StatsRow />
 
-        {/* Hint */}
-        <p className="absolute bottom-6 right-6 text-xs text-slate-700 pointer-events-none">
-          Click anywhere for burst
+        {/* Burst hint */}
+        <p className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 text-xs text-slate-500 pointer-events-none opacity-60">
+          ✨ Click anywhere for burst
         </p>
       </div>
     </div>
@@ -215,11 +229,14 @@ const StatsRow = () => {
   ];
 
   return (
-    <div ref={ref} className="flex flex-wrap justify-center gap-8 md:gap-16"
-      style={{ animation: 'fadeUp .7s .7s ease both', opacity: 0, animationFillMode: 'forwards' }}>
+    <div
+      ref={ref}
+      className="flex flex-wrap justify-center gap-8 sm:gap-12 md:gap-16"
+      style={{ animation: 'fadeUp .7s .7s ease both', opacity: 0, animationFillMode: 'forwards' }}
+    >
       {stats.map((s, i) => (
-        <div key={i} className="text-center">
-          <p className="text-3xl font-black text-white tabular-nums">
+        <div key={i} className="text-center min-w-[80px]">
+          <p className="text-2xl sm:text-3xl font-black text-white tabular-nums">
             {s.value}<span className="text-primary-400">{s.suffix}</span>
           </p>
           <p className="text-xs text-slate-500 mt-1 tracking-wide">{s.label}</p>
@@ -239,7 +256,7 @@ const steps = [
     ),
     color: 'from-primary-500/20 to-primary-500/5',
     accent: 'text-primary-400',
-    glow: 'rgba(99,102,241,.25)',
+    glow: 'rgba(99,102,241,.3)',
     title: 'Create Your Profile',
     desc: 'Set your budget, preferred location, and move-in date. Owners list rooms with photos, rent, and furnishing details.',
   },
@@ -251,9 +268,9 @@ const steps = [
     ),
     color: 'from-amber-500/20 to-amber-500/5',
     accent: 'text-amber-400',
-    glow: 'rgba(245,158,11,.25)',
-    title: 'AI Scores the Match',
-    desc: 'Gemini evaluates budget alignment, location proximity, and move-in fit — returning a 0–100 score with a clear explanation.',
+    glow: 'rgba(245,158,11,.3)',
+    title: 'RoomYaaro Match™',
+    desc: 'Our AI computes a 0–100 compatibility score with natural language explanations — cached so it\'s always instant.',
   },
   {
     icon: (
@@ -263,20 +280,63 @@ const steps = [
     ),
     color: 'from-emerald-500/20 to-emerald-500/5',
     accent: 'text-emerald-400',
-    glow: 'rgba(16,185,129,.25)',
-    title: 'Connect & Chat',
-    desc: 'Express interest, get accepted, and unlock real-time WebSocket chat instantly. Email notifications keep both parties informed.',
+    glow: 'rgba(16,185,129,.3)',
+    title: 'Connect &amp; Chat',
+    desc: 'Express interest, get accepted, and unlock real-time WebSocket chat instantly. Email notifications keep everyone in the loop.',
   },
 ];
 
 /* ─── Feature grid items ─── */
 const features = [
-  { title: 'AI Compatibility Score', desc: 'Gemini LLM computes a 0–100 match score with a natural language explanation stored in DB.', color: 'border-primary-500/20 hover:border-primary-500/40' },
-  { title: 'Real-Time Chat', desc: 'WebSocket-powered messaging unlocked on accepted interest. All messages persisted in the database.', color: 'border-emerald-500/20 hover:border-emerald-500/40' },
-  { title: 'Smart Fallback', desc: "If the LLM is unavailable, a rule-based engine computes a score so the platform never goes dark.", color: 'border-amber-500/20 hover:border-amber-500/40' },
-  { title: 'Email Notifications', desc: 'Owners notified on high-score interest (>80). Tenants notified on acceptance or rejection.', color: 'border-red-500/20 hover:border-red-500/40' },
-  { title: 'Role-Based Access', desc: 'Three distinct roles: Tenant, Owner, and Admin — each with their own dashboard and permissions.', color: 'border-cyan-500/20 hover:border-cyan-500/40' },
-  { title: 'Admin Dashboard', desc: 'Manage users, listings, and view platform-wide analytics from a central admin control panel.', color: 'border-violet-500/20 hover:border-violet-500/40' },
+  {
+    emoji: '🤖',
+    title: 'RoomYaaro Match™',
+    desc: 'AI computes a 0–100 match score with a natural language explanation stored in the DB.',
+    border: 'border-primary-500/20 hover:border-primary-500/50',
+    glow: 'hover:shadow-primary-500/10',
+  },
+  {
+    emoji: '💬',
+    title: 'Real-Time Chat',
+    desc: 'WebSocket-powered messaging unlocked on accepted interest. All messages persisted in the database.',
+    border: 'border-emerald-500/20 hover:border-emerald-500/50',
+    glow: 'hover:shadow-emerald-500/10',
+  },
+  {
+    emoji: '⚡',
+    title: 'Smart Fallback',
+    desc: 'If the LLM is unavailable, a rule-based engine computes a score so the platform never goes dark.',
+    border: 'border-amber-500/20 hover:border-amber-500/50',
+    glow: 'hover:shadow-amber-500/10',
+  },
+  {
+    emoji: '📩',
+    title: 'Email Notifications',
+    desc: 'Beautiful HTML emails for high-match alerts, acceptance, and rejection — powered by Brevo SMTP.',
+    border: 'border-red-500/20 hover:border-red-500/50',
+    glow: 'hover:shadow-red-500/10',
+  },
+  {
+    emoji: '🔐',
+    title: 'Role-Based Access',
+    desc: 'Three distinct roles: Tenant, Owner, and Admin — each with their own dashboard and permissions.',
+    border: 'border-cyan-500/20 hover:border-cyan-500/50',
+    glow: 'hover:shadow-cyan-500/10',
+  },
+  {
+    emoji: '🛡️',
+    title: 'Admin Dashboard',
+    desc: 'Manage users, listings, and view platform-wide analytics from a central admin control panel.',
+    border: 'border-violet-500/20 hover:border-violet-500/50',
+    glow: 'hover:shadow-violet-500/10',
+  },
+];
+
+/* ─── Testimonial ─── */
+const testimonials = [
+  { quote: 'Found my perfect flatmate in 3 days — the AI score was spot on.', name: 'Priya S.', role: 'Tenant, Bangalore' },
+  { quote: 'Listed my PG room and got 5 quality inquiries within 24 hours!', name: 'Rahul M.', role: 'Owner, Pune' },
+  { quote: 'The compatibility explanation told me exactly why the room was right for me.', name: 'Ananya K.', role: 'Tenant, Hyderabad' },
 ];
 
 /* ─── Main Home component ─── */
@@ -286,22 +346,26 @@ const Home = () => (
     <ParticleHero />
 
     {/* How It Works */}
-    <section className="max-w-6xl mx-auto px-4 py-24">
-      <div className="text-center mb-16" style={{ animation: 'fadeUp .6s ease both' }}>
+    <section className="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+      <div className="text-center mb-12 sm:mb-16" style={{ animation: 'fadeUp .6s ease both' }}>
         <p className="section-label mb-3">The Flow</p>
-        <h2 className="text-4xl font-black text-white">How It Works</h2>
-        <p className="text-slate-400 mt-3 max-w-lg mx-auto">Three steps from sign-up to moving in — powered by AI.</p>
+        <h2 className="text-3xl sm:text-4xl font-black text-white">How It Works</h2>
+        <p className="text-slate-400 mt-3 max-w-lg mx-auto text-sm sm:text-base">Three steps from sign-up to moving in — powered by AI.</p>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-6 stagger-enter">
+      <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-6 stagger-enter">
         {steps.map((step, i) => (
           <div
             key={i}
-            className="card p-7 group hover:-translate-y-2 transition-transform duration-300 cursor-default"
-            style={{ boxShadow: `0 0 0 0 ${step.glow}` }}
+            className="card p-6 sm:p-7 group hover:-translate-y-2 transition-all duration-300 cursor-default relative overflow-hidden"
             onMouseEnter={e => e.currentTarget.style.boxShadow = `0 8px 40px ${step.glow}`}
             onMouseLeave={e => e.currentTarget.style.boxShadow = ''}
           >
+            {/* Number watermark */}
+            <span className="absolute top-4 right-5 text-6xl font-black opacity-[0.04] text-white select-none pointer-events-none">
+              0{i + 1}
+            </span>
+
             <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${step.color} flex items-center justify-center mb-5 ${step.accent} group-hover:scale-110 transition-transform duration-300`}>
               {step.icon}
             </div>
@@ -317,18 +381,18 @@ const Home = () => (
     </section>
 
     {/* Features grid */}
-    <section className="max-w-6xl mx-auto px-4 pb-24">
-      <div className="text-center mb-12">
+    <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-16 sm:pb-24">
+      <div className="text-center mb-10 sm:mb-12">
         <p className="section-label mb-3">What You Get</p>
-        <h2 className="text-4xl font-black text-white">Platform Features</h2>
+        <h2 className="text-3xl sm:text-4xl font-black text-white">Platform Features</h2>
       </div>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 stagger-enter">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 stagger-enter">
         {features.map((f, i) => (
           <div
             key={i}
-            className={`glass rounded-2xl p-6 border ${f.color} transition-all duration-300 hover:-translate-y-1 cursor-default`}
+            className={`glass rounded-2xl p-5 sm:p-6 border ${f.border} transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${f.glow} cursor-default`}
           >
-            <div className="w-2 h-2 rounded-full bg-current mb-4 opacity-60" />
+            <div className="text-2xl mb-3">{f.emoji}</div>
             <h3 className="font-bold text-white mb-2">{f.title}</h3>
             <p className="text-slate-400 text-sm leading-relaxed">{f.desc}</p>
           </div>
@@ -336,23 +400,57 @@ const Home = () => (
       </div>
     </section>
 
+    {/* Testimonials */}
+    <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-16 sm:pb-24">
+      <div className="text-center mb-10 sm:mb-12">
+        <p className="section-label mb-3">Social Proof</p>
+        <h2 className="text-3xl sm:text-4xl font-black text-white">Loved by Tenants & Owners</h2>
+      </div>
+      <div className="grid sm:grid-cols-3 gap-4 sm:gap-5">
+        {testimonials.map((t, i) => (
+          <div key={i} className="card p-5 sm:p-6 relative">
+            <div className="text-3xl text-primary-500/30 font-serif leading-none mb-3">"</div>
+            <p className="text-slate-300 text-sm leading-relaxed mb-4 italic">{t.quote}</p>
+            <div className="flex items-center gap-3 mt-auto pt-3 border-t border-white/5">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-500 to-emerald-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                {t.name[0]}
+              </div>
+              <div>
+                <p className="text-white text-sm font-semibold">{t.name}</p>
+                <p className="text-slate-500 text-xs">{t.role}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
     {/* Owner CTA banner */}
-    <section className="max-w-6xl mx-auto px-4 pb-24">
-      <div className="relative rounded-3xl overflow-hidden p-12 text-center"
-        style={{ background: 'linear-gradient(135deg, rgba(99,102,241,.15) 0%, rgba(16,185,129,.08) 100%)' }}>
-        <div className="absolute inset-0 border border-white/8 rounded-3xl pointer-events-none" />
+    <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-16 sm:pb-24">
+      <div
+        className="relative rounded-2xl sm:rounded-3xl overflow-hidden p-8 sm:p-12 text-center"
+        style={{ background: 'linear-gradient(135deg, rgba(99,102,241,.18) 0%, rgba(16,185,129,.10) 100%)' }}
+      >
+        <div className="absolute inset-0 border border-white/8 rounded-2xl sm:rounded-3xl pointer-events-none" />
         <div className="absolute inset-0 pointer-events-none"
-          style={{ background: 'radial-gradient(ellipse 60% 80% at 50% 0%, rgba(99,102,241,.12), transparent)' }} />
+          style={{ background: 'radial-gradient(ellipse 70% 80% at 50% 0%, rgba(99,102,241,.15), transparent)' }} />
+
+        {/* Decorative blobs */}
+        <div className="absolute -top-8 -left-8 w-40 h-40 rounded-full opacity-10 blur-2xl pointer-events-none"
+          style={{ background: 'radial-gradient(circle, #6366f1, transparent)' }} />
+        <div className="absolute -bottom-8 -right-8 w-48 h-48 rounded-full opacity-10 blur-2xl pointer-events-none"
+          style={{ background: 'radial-gradient(circle, #10b981, transparent)' }} />
+
         <div className="relative z-10">
-          <p className="section-label mb-4 text-primary-400">For Property Owners</p>
-          <h2 className="text-4xl font-black text-white mb-4">
+          <p className="section-label mb-3 sm:mb-4 text-primary-400">For Property Owners</p>
+          <h2 className="text-3xl sm:text-4xl font-black text-white mb-3 sm:mb-4 leading-tight">
             List Your Room.<br />
             <span className="gradient-text">Find the Right Tenant.</span>
           </h2>
-          <p className="text-slate-400 mb-8 max-w-xl mx-auto leading-relaxed">
+          <p className="text-slate-400 mb-6 sm:mb-8 max-w-xl mx-auto leading-relaxed text-sm sm:text-base px-2">
             Post your room in minutes. Our AI scores every incoming interest request so you spend time only on high-quality matches.
           </p>
-          <Link to="/register" className="btn-primary px-10 py-4 text-base">
+          <Link to="/register" className="btn-primary px-8 sm:px-10 py-3.5 sm:py-4 text-base inline-flex items-center gap-2">
             List Your Room Free
             <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>

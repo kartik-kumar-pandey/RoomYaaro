@@ -121,7 +121,7 @@ const OwnerInterests = () => {
                   {interest.compatibility && (
                     <div className="text-center">
                       <MiniRing score={interest.compatibility.score} />
-                      <p className="text-xs text-slate-600 mt-0.5">score</p>
+                      <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-0.5">Match</p>
                     </div>
                   )}
 
@@ -142,7 +142,7 @@ const OwnerInterests = () => {
               {interest.compatibility?.explanation && (
                 <div className="mt-4 pt-4 border-t border-white/5">
                   <p className="text-xs text-slate-500 leading-relaxed">
-                    <span className="text-primary-400 font-semibold">AI Note: </span>
+                    <span className="text-primary-400 font-bold uppercase tracking-wider text-[10px]">RoomYaaro Match™: </span>
                     {interest.compatibility.explanation}
                   </p>
                 </div>

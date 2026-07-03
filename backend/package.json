@@ -1,7 +1,7 @@
 {
-  "name": "rent-flatmate-finder-backend",
+  "name": "roomyaaro-backend",
   "version": "1.0.0",
-  "description": "Rent & Flatmate Finder API",
+  "description": "RoomYaaro API – AI-Powered Room & Flatmate Matching",
   "main": "server.js",
   "type": "module",
   "scripts": {

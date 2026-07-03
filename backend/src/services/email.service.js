@@ -7,6 +7,8 @@ import prisma from "../config/db.js";
 import { highMatchTemplate } from "../templates/highMatch.template.js";
 import { interestAcceptedTemplate } from "../templates/interestAccepted.template.js";
 import { interestRejectedTemplate } from "../templates/interestRejected.template.js";
+import { verifyEmailTemplate } from "../templates/verifyEmail.template.js";
+import { passwordResetTemplate } from "../templates/passwordReset.template.js";
 
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
@@ -260,6 +262,42 @@ export const notifyInterestRejected = async (tenant, listing) => {
             availableFrom: listing.availableFrom ? new Date(listing.availableFrom).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Immediate',
         },
         actionUrl: `${process.env.CLIENT_URL || 'http://localhost:5173'}/tenant/listings`,
+    });
+};
+
+/*
+|--------------------------------------------------------------------------
+| Email Verification
+|--------------------------------------------------------------------------
+*/
+
+export const sendVerificationEmail = async (user, rawToken) => {
+    const verifyUrl = `${process.env.CLIENT_URL || 'http://localhost:5173'}/verify-email?token=${rawToken}`;
+    const html = verifyEmailTemplate({ name: user.name, verifyUrl });
+
+    return sendEmail({
+        to: user.email,
+        subject: '✅ Verify Your RoomYaaro Account',
+        html,
+        type: 'GENERAL',
+    });
+};
+
+/*
+|--------------------------------------------------------------------------
+| Password Reset
+|--------------------------------------------------------------------------
+*/
+
+export const sendPasswordResetEmail = async (user, rawToken) => {
+    const resetUrl = `${process.env.CLIENT_URL || 'http://localhost:5173'}/reset-password?token=${rawToken}`;
+    const html = passwordResetTemplate({ name: user.name, resetUrl });
+
+    return sendEmail({
+        to: user.email,
+        subject: '🔒 Reset Your RoomYaaro Password',
+        html,
+        type: 'GENERAL',
     });
 };
 

@@ -54,7 +54,7 @@ const ListingCard = ({ listing, compatibility, onClick, showInterest }) => {
         {score != null && (
           <div className={`absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full border ${scoreBg} backdrop-blur-sm`}>
             <ScoreRing score={score} size={22} />
-            <span className={`text-xs font-bold ${scoreColor}`}>{score}</span>
+            <span className={`text-xs font-bold ${scoreColor}`}>{score}%</span>
           </div>
         )}
 

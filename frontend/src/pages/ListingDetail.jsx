@@ -42,14 +42,15 @@ const CompatibilityRing = ({ score, explanation }) => {
           </defs>
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-3xl font-black text-white tabular-nums">{score}</span>
-          <span className="text-xs text-slate-500">/ 100</span>
+          <span className="text-3xl font-black text-white tabular-nums">{score}%</span>
+          <span className="text-[9px] uppercase tracking-wider text-slate-500 font-bold mt-0.5">Match</span>
         </div>
       </div>
 
       {/* Text */}
       <div className="flex-1 text-center sm:text-left">
-        <div className="flex items-center gap-2 justify-center sm:justify-start mb-2">
+        <div className="flex flex-wrap items-center gap-2.5 justify-center sm:justify-start mb-2">
+          <span className="text-xs font-bold uppercase tracking-wider text-primary-400">RoomYaaro Match™</span>
           <span className={`badge ${badgeCls}`}>{label}</span>
         </div>
         <p className="text-sm text-slate-400 leading-relaxed">{explanation}</p>

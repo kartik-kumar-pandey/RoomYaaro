@@ -42,7 +42,10 @@ export const getAdminDashboard = asyncHandler(async (req, res) => {
 });
 
 export const getAdminUsers = asyncHandler(async (req, res) => {
-  const { search, role, page = 1, limit = 20 } = req.query;
+  const { role } = req.query;
+  const search = typeof req.query.search === 'string' ? req.query.search.slice(0, 100) : undefined;
+  const page = Math.max(1, parseInt(req.query.page) || 1);
+  const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 20));
 
   const where = {
     ...(role && { role }),
@@ -54,13 +57,13 @@ export const getAdminUsers = asyncHandler(async (req, res) => {
     }),
   };
 
-  const skip = (parseInt(page) - 1) * parseInt(limit);
+  const skip = (page - 1) * limit;
 
   const [users, total] = await Promise.all([
     prisma.user.findMany({
       where,
       skip,
-      take: parseInt(limit),
+      take: limit,
       select: {
         id: true,
         name: true,
@@ -75,7 +78,7 @@ export const getAdminUsers = asyncHandler(async (req, res) => {
     prisma.user.count({ where }),
   ]);
 
-  sendSuccess(res, { users, total, page: parseInt(page), pages: Math.ceil(total / parseInt(limit)) });
+  sendSuccess(res, { users, total, page, pages: Math.ceil(total / limit) });
 });
 
 export const deleteAdminUser = asyncHandler(async (req, res) => {
@@ -102,7 +105,10 @@ export const toggleUserStatus = asyncHandler(async (req, res) => {
 });
 
 export const getAdminListings = asyncHandler(async (req, res) => {
-  const { search, status, page = 1, limit = 20 } = req.query;
+  const { status } = req.query;
+  const search = typeof req.query.search === 'string' ? req.query.search.slice(0, 100) : undefined;
+  const page = Math.max(1, parseInt(req.query.page) || 1);
+  const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 20));
 
   const where = {
     isDeleted: false,
@@ -115,13 +121,13 @@ export const getAdminListings = asyncHandler(async (req, res) => {
     }),
   };
 
-  const skip = (parseInt(page) - 1) * parseInt(limit);
+  const skip = (page - 1) * limit;
 
   const [listings, total] = await Promise.all([
     prisma.roomListing.findMany({
       where,
       skip,
-      take: parseInt(limit),
+      take: limit,
       include: {
         owner: { select: { id: true, name: true, email: true } },
         photos: { take: 1 },
@@ -132,7 +138,7 @@ export const getAdminListings = asyncHandler(async (req, res) => {
     prisma.roomListing.count({ where }),
   ]);
 
-  sendSuccess(res, { listings, total, page: parseInt(page), pages: Math.ceil(total / parseInt(limit)) });
+  sendSuccess(res, { listings, total, page, pages: Math.ceil(total / limit) });
 });
 
 export const deleteAdminListing = asyncHandler(async (req, res) => {
