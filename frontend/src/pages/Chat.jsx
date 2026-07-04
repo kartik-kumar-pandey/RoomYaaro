@@ -84,19 +84,20 @@ const Chat = () => {
         <div className="card flex overflow-hidden" style={{ height: 'calc(100vh - 13rem)', animation: 'fadeUp .4s .1s ease both', opacity:0, animationFillMode:'forwards' }}>
 
           {/* ── Room list ── */}
-          <div className="w-72 flex-shrink-0 border-r border-white/6 flex flex-col">
-            <div className="p-4 border-b border-white/6">
-              <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Conversations</p>
+          <div className={`w-full md:w-72 flex-shrink-0 md:border-r border-white/6 flex flex-col ${activeRoom ? 'hidden md:flex' : 'flex'}`}>
+            <div className="p-4 border-b border-white/6 flex items-center justify-between">
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Conversations</p>
+              <span className="badge badge-primary text-[10px] px-2 py-0.5">{rooms.length} active</span>
             </div>
-            <div className="flex-1 overflow-y-auto">
+            <div className="flex-1 overflow-y-auto divide-y divide-white/4">
               {rooms.length === 0 ? (
-                <div className="p-6 text-center">
-                  <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-3 text-slate-600">
+                <div className="p-8 text-center mt-8">
+                  <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-3 text-slate-500">
                     <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
                     </svg>
                   </div>
-                  <p className="text-xs text-slate-500 leading-relaxed">No active chats yet. Interest must be accepted first.</p>
+                  <p className="text-xs text-slate-500 leading-relaxed">No active chats yet. Express interest and get accepted first to chat!</p>
                 </div>
               ) : rooms.map((room) => {
                 const isActive = activeRoom?.id === room.id;
@@ -106,12 +107,12 @@ const Chat = () => {
                   <button
                     key={room.id}
                     onClick={() => openRoom(room)}
-                    className={`w-full text-left px-4 py-3.5 border-b border-white/4 transition-all duration-200 flex items-center gap-3 ${
-                      isActive ? 'bg-primary-500/10 border-l-2 border-l-primary-500' : 'hover:bg-white/4'
+                    className={`w-full text-left px-4 py-4 transition-all duration-200 flex items-center gap-3 ${
+                      isActive ? 'bg-primary-500/10 border-l-4 border-l-primary-500' : 'hover:bg-white/4'
                     }`}
                   >
-                    <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 ${
-                      isActive ? 'bg-primary-500/30 text-primary-300' : 'bg-white/8 text-slate-400'
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold flex-shrink-0 ${
+                      isActive ? 'bg-primary-500/30 text-primary-300' : 'bg-white/5 text-slate-400 border border-white/5'
                     }`}>
                       {initial}
                     </div>
@@ -119,9 +120,9 @@ const Chat = () => {
                       <p className={`text-sm font-semibold truncate ${isActive ? 'text-white' : 'text-slate-300'}`}>
                         {title}
                       </p>
-                      <p className="text-xs text-slate-600 truncate">{getRoomSub(room)}</p>
+                      <p className="text-xs text-slate-500 truncate mt-0.5">{getRoomSub(room)}</p>
                     </div>
-                    {isActive && <div className="w-1.5 h-1.5 rounded-full bg-primary-400 flex-shrink-0" />}
+                    {isActive && <div className="w-2 h-2 rounded-full bg-primary-400 flex-shrink-0" />}
                   </button>
                 );
               })}
@@ -129,22 +130,35 @@ const Chat = () => {
           </div>
 
           {/* ── Message pane ── */}
-          <div className="flex-1 flex flex-col min-w-0">
+          <div className={`flex-1 flex flex-col min-w-0 bg-slate-900/10 ${!activeRoom ? 'hidden md:flex' : 'flex'}`}>
             {activeRoom ? (
               <>
                 {/* Header */}
-                <div className="px-5 py-4 border-b border-white/6 flex items-center gap-3 flex-shrink-0">
-                  <div className="w-9 h-9 rounded-full bg-primary-500/20 flex items-center justify-center text-sm font-bold text-primary-400">
-                    {getRoomTitle(activeRoom).charAt(0).toUpperCase()}
-                  </div>
-                  <div>
-                    <p className="font-semibold text-white text-sm">{getRoomTitle(activeRoom)}</p>
-                    <p className="text-xs text-emerald-400">Active</p>
+                <div className="px-5 py-4 border-b border-white/6 flex items-center justify-between flex-shrink-0">
+                  <div className="flex items-center gap-3">
+                    <button 
+                      onClick={() => setActiveRoom(null)} 
+                      className="md:hidden text-slate-400 hover:text-white p-1 mr-1 rounded-lg hover:bg-white/5"
+                    >
+                      <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                      </svg>
+                    </button>
+                    <div className="w-10 h-10 rounded-xl bg-primary-500/20 flex items-center justify-center text-sm font-bold text-primary-400 border border-primary-500/15">
+                      {getRoomTitle(activeRoom).charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                      <p className="font-semibold text-white text-sm leading-snug">{getRoomTitle(activeRoom)}</p>
+                      <p className="text-[10px] text-emerald-400 flex items-center gap-1 mt-0.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        Online
+                      </p>
+                    </div>
                   </div>
                 </div>
 
                 {/* Messages */}
-                <div className="flex-1 overflow-y-auto p-5 space-y-3">
+                <div className="flex-1 overflow-y-auto p-5 space-y-4 bg-slate-950/20">
                   {messages.map((msg, i) => {
                     const isMine = msg.senderId === user.id;
                     return (
@@ -153,16 +167,16 @@ const Chat = () => {
                         className={`flex ${isMine ? 'justify-end' : 'justify-start'} msg-enter`}
                         style={{ animationDelay: msg._new ? '0ms' : `${Math.min(i * 20, 200)}ms` }}
                       >
-                        <div className={`max-w-xs lg:max-w-sm px-4 py-2.5 rounded-2xl text-sm ${
+                        <div className={`max-w-[85%] sm:max-w-xs lg:max-w-sm px-4 py-3 rounded-2xl text-sm shadow-sm ${
                           isMine
-                            ? 'bg-primary-500 text-white rounded-br-sm'
-                            : 'glass text-slate-200 rounded-bl-sm border border-white/8'
+                            ? 'bg-primary-500 text-white rounded-br-none'
+                            : 'glass text-slate-200 rounded-bl-none border border-white/8'
                         }`}>
                           {!isMine && msg.sender?.name && (
-                            <p className="text-xs font-semibold mb-1 opacity-60">{msg.sender.name}</p>
+                            <p className="text-[10px] font-bold mb-1 opacity-60 tracking-wide uppercase">{msg.sender.name}</p>
                           )}
-                          <p className="leading-relaxed">{msg.content}</p>
-                          <p className={`text-xs mt-1.5 ${isMine ? 'text-primary-200 opacity-70' : 'text-slate-500'}`}>
+                          <p className="leading-relaxed break-words">{msg.content}</p>
+                          <p className={`text-[10px] text-right mt-1.5 ${isMine ? 'text-primary-200/80' : 'text-slate-500'}`}>
                             {formatTime(msg.createdAt)}
                           </p>
                         </div>
@@ -173,7 +187,7 @@ const Chat = () => {
                 </div>
 
                 {/* Input */}
-                <form onSubmit={sendMessage} className="p-4 border-t border-white/6 flex gap-3 flex-shrink-0">
+                <form onSubmit={sendMessage} className="p-4 border-t border-white/6 bg-slate-950/10 flex gap-3 flex-shrink-0">
                   <input
                     ref={inputRef}
                     className="input-field flex-1"
@@ -184,7 +198,7 @@ const Chat = () => {
                   />
                   <button
                     type="submit"
-                    className="btn-primary px-4 py-2.5 flex-shrink-0"
+                    className="btn-primary w-11 h-11 p-0 flex items-center justify-center flex-shrink-0"
                     disabled={!newMessage.trim() || sending}
                   >
                     <SendIcon />
@@ -193,13 +207,13 @@ const Chat = () => {
               </>
             ) : (
               <div className="flex-1 flex flex-col items-center justify-center text-center p-8">
-                <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-4 text-slate-600">
+                <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center mb-4 text-slate-500 border border-white/5">
                   <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.3">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
                   </svg>
                 </div>
-                <p className="text-slate-400 font-medium">Select a conversation</p>
-                <p className="text-slate-600 text-sm mt-1">Choose a chat from the left to get started</p>
+                <p className="text-slate-300 font-bold">Select a conversation</p>
+                <p className="text-slate-500 text-xs mt-1">Choose a chat from the left panel to get started</p>
               </div>
             )}
           </div>

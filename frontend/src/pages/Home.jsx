@@ -2,6 +2,108 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import PublicLayout from '../layouts/PublicLayout';
 
+/* ─── Interactive 3D Card component ─── */
+const Interactive3DCard = () => {
+  const cardRef = useRef(null);
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [hovered, setHovered] = useState(false);
+
+  const handleMouseMove = (e) => {
+    const el = cardRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const xc = rect.width / 2;
+    const yc = rect.height / 2;
+    const rotateX = -(y - yc) / 12;
+    const rotateY = (x - xc) / 12;
+    setTilt({ x: rotateX, y: rotateY });
+  };
+
+  const handleMouseLeave = () => {
+    setTilt({ x: 0, y: 0 });
+    setHovered(false);
+  };
+
+  const handleMouseEnter = () => {
+    setHovered(true);
+  };
+
+  return (
+    <div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className="relative w-full max-w-[380px] h-[440px] rounded-3xl glass border border-white/10 p-6 flex flex-col justify-between transition-all duration-200 ease-out select-none shadow-2xl cursor-default overflow-hidden group mx-auto"
+      style={{
+        transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale3d(${hovered ? 1.03 : 1}, ${hovered ? 1.03 : 1}, 1)`,
+        transformStyle: 'preserve-3d',
+      }}
+    >
+      {/* Background gradients */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-emerald-500/10 pointer-events-none" />
+      <div 
+        className="absolute -inset-20 bg-gradient-to-r from-primary-500/20 to-emerald-500/20 opacity-0 group-hover:opacity-100 blur-3xl transition-opacity duration-500 pointer-events-none" 
+        style={{
+          transform: `translate3d(${tilt.y * 3}px, ${-tilt.x * 3}px, 0px)`
+        }}
+      />
+
+      {/* Card Header (Owner / Room) */}
+      <div style={{ transform: 'translateZ(30px)' }} className="transition-transform duration-200">
+        <div className="flex justify-between items-start mb-4">
+          <span className="badge badge-primary px-3 py-1 text-[10px] font-bold">Indiranagar, Bengaluru</span>
+          <span className="text-white font-extrabold text-base">₹15,000<span className="text-xs text-slate-400 font-normal">/mo</span></span>
+        </div>
+        <h3 className="text-lg font-bold text-white mb-2 leading-tight">Spacious Double Room near Metro</h3>
+        <p className="text-xs text-slate-400">Listed by Amit Sharma (Owner)</p>
+      </div>
+
+      {/* Visual Matching Core (Floating Elements) */}
+      <div className="relative my-auto flex items-center justify-center h-48" style={{ transform: 'translateZ(60px)' }}>
+        {/* Connection line */}
+        <div className="absolute w-3/4 h-[2px] bg-gradient-to-r from-primary-500/40 via-emerald-500/40 to-primary-500/40 animate-pulse" />
+
+        {/* Tenant Node */}
+        <div className="absolute left-4 w-14 h-14 rounded-2xl bg-slate-900 border border-primary-500/50 flex flex-col items-center justify-center shadow-lg transition-transform duration-300 group-hover:scale-110">
+          <div className="text-lg">👦</div>
+          <span className="text-[8px] text-slate-300 font-semibold mt-1">Tenant Profile</span>
+        </div>
+
+        {/* Compatibility Score Circle in center */}
+        <div className="absolute z-10 w-20 h-20 rounded-full bg-slate-950 border border-emerald-500/60 flex flex-col items-center justify-center shadow-2xl transition-all duration-300 group-hover:scale-105 group-hover:shadow-emerald-500/20">
+          <span className="text-xl font-black text-emerald-400 animate-pulse">96%</span>
+          <span className="text-[7px] uppercase tracking-wider text-emerald-500 font-black">AI Match</span>
+        </div>
+
+        {/* Owner Node */}
+        <div className="absolute right-4 w-14 h-14 rounded-2xl bg-slate-900 border border-emerald-500/50 flex flex-col items-center justify-center shadow-lg transition-transform duration-300 group-hover:scale-110">
+          <div className="text-lg">🏠</div>
+          <span className="text-[8px] text-slate-300 font-semibold mt-1">Room Listing</span>
+        </div>
+      </div>
+
+      {/* Card Footer (AI explanation pill) */}
+      <div 
+        style={{ transform: 'translateZ(40px)' }} 
+        className="transition-transform duration-200 bg-white/5 border border-white/5 rounded-2xl p-3"
+      >
+        <p className="text-[10px] text-emerald-400 font-bold mb-1 flex items-center gap-1">
+          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+          AI Match Verified
+        </p>
+        <p className="text-[10px] text-slate-300 leading-relaxed">
+          Perfect budget alignment and highly matches your preferred location. 3-min walk to metro!
+        </p>
+      </div>
+    </div>
+  );
+};
+
 /* ─── Particle canvas hero ─── */
 const ParticleHero = () => {
   const canvasRef = useRef(null);
@@ -110,7 +212,7 @@ const ParticleHero = () => {
   }, []);
 
   return (
-    <div ref={heroRef} className="relative cursor-pointer select-none" style={{ minHeight: '92vh' }}>
+    <div ref={heroRef} className="relative cursor-pointer select-none flex items-center" style={{ minHeight: '92vh' }}>
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
 
       {/* Multi-layer gradient overlay */}
@@ -122,66 +224,71 @@ const ParticleHero = () => {
         style={{ background: 'radial-gradient(ellipse 40% 30% at 20% 20%, rgba(139,92,246,.06), transparent 70%)' }} />
 
       {/* Hero content */}
-      <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 sm:px-8 pt-24 sm:pt-28 pb-16 sm:pb-20">
+      <div className="relative z-10 grid lg:grid-cols-12 gap-12 items-center max-w-7xl mx-auto w-full px-4 sm:px-6 md:px-8 pt-24 sm:pt-28 pb-16 sm:pb-20">
+        
+        {/* Left Column (Text Content) */}
+        <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left">
+          {/* Eyebrow pill */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass border border-primary-500/20 text-primary-400 text-xs font-bold tracking-widest uppercase mb-6 sm:mb-8"
+            style={{ animation: 'fadeUp .6s .1s ease both' }}>
+            <span className="w-1.5 h-1.5 rounded-full bg-primary-400 animate-pulse" />
+            AI-Powered Room &amp; Flatmate Matching
+          </div>
 
-        {/* Eyebrow pill */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass border border-primary-500/20 text-primary-400 text-xs font-bold tracking-widest uppercase mb-6 sm:mb-8"
-          style={{ animation: 'fadeUp .6s .1s ease both' }}>
-          <span className="w-1.5 h-1.5 rounded-full bg-primary-400 animate-pulse" />
-          AI-Powered Room &amp; Flatmate Matching
+          {/* Main headline */}
+          <h1
+            className="text-5xl sm:text-6xl md:text-7xl font-black leading-none tracking-tight text-white mb-3 sm:mb-4"
+            style={{ animation: 'fadeUp .7s .25s ease both' }}
+          >
+            RoomYaaro
+          </h1>
+
+          {/* Tagline */}
+          <h2
+            className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-300 mb-5 sm:mb-6"
+            style={{ animation: 'fadeUp .7s .3s ease both' }}
+          >
+            Find Your Room.{' '}
+            <span className="gradient-text">Find Your Yaar.</span>
+          </h2>
+
+          {/* Subtext */}
+          <p
+            className="text-base sm:text-lg text-slate-400 max-w-md sm:max-w-xl leading-relaxed mb-8 sm:mb-10 px-2 lg:px-0"
+            style={{ animation: 'fadeUp .7s .4s ease both' }}
+          >
+            Our AI-powered compatibility engine matches rooms and roommates in seconds —
+            real-time chat unlocks the moment you connect.
+          </p>
+
+          {/* CTA buttons */}
+          <div
+            className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4 mb-12 sm:mb-16 w-full max-w-xs sm:max-w-none"
+            style={{ animation: 'fadeUp .7s .55s ease both' }}
+          >
+            <Link
+              to="/register"
+              className="btn-primary px-8 py-3.5 text-base w-full sm:w-auto text-center"
+              style={{ animation: 'pulseGlow 3s ease-in-out infinite' }}
+            >
+              Get Started Free
+              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+              </svg>
+            </Link>
+          </div>
+
+          {/* Stats row */}
+          <StatsRow />
         </div>
 
-        {/* Main headline */}
-        <h1
-          className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-none tracking-tight text-white mb-3 sm:mb-4"
-          style={{ animation: 'fadeUp .7s .25s ease both' }}
+        {/* Right Column (Interactive 3D Card) */}
+        <div 
+          className="lg:col-span-5 flex justify-center items-center w-full"
+          style={{ animation: 'fadeUp .8s .65s ease both' }}
         >
-          RoomYaaro
-        </h1>
-
-        {/* Tagline */}
-        <h2
-          className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-300 mb-5 sm:mb-6"
-          style={{ animation: 'fadeUp .7s .3s ease both' }}
-        >
-          Find Your Room.{' '}
-          <span className="gradient-text">Find Your Yaar.</span>
-        </h2>
-
-        {/* Subtext */}
-        <p
-          className="text-base sm:text-lg text-slate-400 max-w-md sm:max-w-xl leading-relaxed mb-8 sm:mb-10 px-2"
-          style={{ animation: 'fadeUp .7s .4s ease both' }}
-        >
-          Our AI-powered compatibility engine matches rooms and roommates in seconds —
-          real-time chat unlocks the moment you connect.
-        </p>
-
-        {/* CTA buttons */}
-        <div
-          className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-12 sm:mb-16 w-full max-w-xs sm:max-w-none"
-          style={{ animation: 'fadeUp .7s .55s ease both' }}
-        >
-          <Link
-            to="/register"
-            className="btn-primary px-8 py-3.5 text-base w-full sm:w-auto text-center"
-            style={{ animation: 'pulseGlow 3s ease-in-out infinite' }}
-          >
-            Get Started Free
-            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-            </svg>
-          </Link>
-          <Link
-            to="/listings"
-            className="btn-secondary px-8 py-3.5 text-base w-full sm:w-auto text-center"
-          >
-            Browse Rooms
-          </Link>
+          <Interactive3DCard />
         </div>
-
-        {/* Stats row */}
-        <StatsRow />
 
         {/* Burst hint */}
         <p className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 text-xs text-slate-500 pointer-events-none opacity-60">

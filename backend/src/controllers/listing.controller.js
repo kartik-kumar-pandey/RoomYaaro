@@ -2,6 +2,7 @@ import { body } from 'express-validator';
 import prisma from '../config/db.js';
 import { asyncHandler, sendSuccess, AppError } from '../utils/helpers.js';
 import { uploadToCloudinary, deleteFromCloudinary } from '../services/upload.service.js';
+import { verifyToken } from '../utils/jwt.js';
 
 export const createListingValidation = [
   body('title').trim().notEmpty().withMessage('Title is required'),
@@ -82,11 +83,32 @@ export const getListings = asyncHandler(async (req, res) => {
 });
 
 export const getListingById = asyncHandler(async (req, res) => {
+  let isAuthed = false;
+  const authHeader = req.headers.authorization;
+  if (authHeader?.startsWith('Bearer ')) {
+    const token = authHeader.split(' ')[1];
+    try {
+      const decoded = verifyToken(token);
+      if (decoded && decoded.userId) {
+        isAuthed = true;
+      }
+    } catch (e) {
+      // Ignore token verification errors and treat as guest
+    }
+  }
+
   const listing = await prisma.roomListing.findFirst({
     where: { id: req.params.id, isDeleted: false },
     include: {
       photos: { orderBy: { order: 'asc' } },
-      owner: { select: { id: true, name: true, email: true, phone: true } },
+      owner: {
+        select: {
+          id: true,
+          name: true,
+          email: isAuthed,
+          phone: isAuthed,
+        },
+      },
     },
   });
 

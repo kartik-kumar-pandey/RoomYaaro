@@ -273,6 +273,7 @@ export const notifyInterestRejected = async (tenant, listing) => {
 
 export const sendVerificationEmail = async (user, rawToken) => {
     const verifyUrl = `${process.env.CLIENT_URL || 'http://localhost:5173'}/verify-email?token=${rawToken}`;
+    console.log(`\n🔑 [DEVELOPMENT LINK] Email Verification URL for ${user.email}:\n${verifyUrl}\n`);
     const html = verifyEmailTemplate({ name: user.name, verifyUrl });
 
     return sendEmail({
@@ -291,6 +292,7 @@ export const sendVerificationEmail = async (user, rawToken) => {
 
 export const sendPasswordResetEmail = async (user, rawToken) => {
     const resetUrl = `${process.env.CLIENT_URL || 'http://localhost:5173'}/reset-password?token=${rawToken}`;
+    console.log(`\n🔒 [DEVELOPMENT LINK] Password Reset URL for ${user.email}:\n${resetUrl}\n`);
     const html = passwordResetTemplate({ name: user.name, resetUrl });
 
     return sendEmail({

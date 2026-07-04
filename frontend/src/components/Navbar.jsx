@@ -76,6 +76,42 @@ const Navbar = () => {
 
   const initials = user?.name?.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2) || 'U';
 
+  const isTabActive = (tabName) => {
+    const path = location.pathname;
+    if (tabName === 'matches') {
+      return path === '/tenant/recommendations';
+    }
+    if (tabName === 'browse') {
+      return path === '/listings' || path.startsWith('/listings/') || path === '/tenant/listings';
+    }
+    if (tabName === 'interests') {
+      return path === '/tenant/interests' || path === '/owner/interests';
+    }
+    if (tabName === 'chat') {
+      return path.includes('/chat');
+    }
+    if (tabName === 'me') {
+      return (
+        path === '/tenant/dashboard' ||
+        path === '/owner/dashboard' ||
+        path === '/admin/dashboard' ||
+        path === '/tenant/profile' ||
+        path.startsWith('/owner/listings') ||
+        path.startsWith('/owner/create-listing')
+      );
+    }
+    return false;
+  };
+
+  const getTabClass = (tabName) => {
+    const active = isTabActive(tabName);
+    return `flex flex-col items-center justify-center w-12 h-12 transition-all duration-200 relative ${
+      active 
+        ? 'text-primary-500 dark:text-primary-400 font-extrabold scale-110' 
+        : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+    }`;
+  };
+
   return (
     <>
       <nav className={`sticky top-0 z-50 transition-all duration-300 ${
@@ -98,14 +134,6 @@ const Navbar = () => {
 
             {/* Desktop nav */}
             <div className="hidden md:flex items-center gap-1">
-              <Link
-                to="/listings"
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all duration-200"
-              >
-                <SearchIcon />
-                Browse
-              </Link>
-
               {user && (
                 <>
                   <Link
@@ -181,28 +209,15 @@ const Navbar = () => {
         {mobileOpen && (
           <div className="md:hidden border-t border-slate-200 dark:border-white/8 bg-slate-100 dark:bg-slate-950 backdrop-blur-xl animate-fade-in">
             <div className="px-4 py-4 space-y-1">
-              <Link to="/listings" className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/5 transition-colors">
-                <SearchIcon /> Browse Listings
-              </Link>
               {user ? (
-                <>
-                  <Link to={dashboardLink} className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/5 transition-colors">
-                    Dashboard
-                  </Link>
-                  {(user.role === 'TENANT' || user.role === 'OWNER') && (
-                    <Link to={`/${user.role.toLowerCase()}/chat`} className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/5 transition-colors">
-                      <ChatIcon /> Chat
-                    </Link>
-                  )}
-                  <div className="pt-2 border-t border-slate-200 dark:border-white/5 mt-2">
-                    <button onClick={toggleTheme} className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-white/5 transition-colors">
-                      {theme === 'dark' ? <SunIcon /> : <MoonIcon />} Toggle Theme ({theme})
-                    </button>
-                    <button onClick={handleLogout} className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-red-500 dark:text-red-400 hover:bg-red-500/5 transition-colors mt-1">
-                      <LogoutIcon /> Sign Out
-                    </button>
-                  </div>
-                </>
+                <div className="space-y-1">
+                  <button onClick={toggleTheme} className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-white/5 transition-colors">
+                    {theme === 'dark' ? <SunIcon /> : <MoonIcon />} Toggle Theme ({theme})
+                  </button>
+                  <button onClick={handleLogout} className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-red-500 dark:text-red-400 hover:bg-red-500/5 transition-colors mt-1">
+                    <LogoutIcon /> Sign Out
+                  </button>
+                </div>
               ) : (
                 <div className="pt-2 border-t border-slate-200 dark:border-white/5 mt-2 space-y-2">
                   <button onClick={toggleTheme} className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-white/5 transition-colors">
@@ -218,6 +233,100 @@ const Navbar = () => {
           </div>
         )}
       </nav>
+
+      {/* Bottom Nav Bar for Mobile (Instagram-style) */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 dark:bg-slate-950/85 backdrop-blur-xl border-t border-slate-200 dark:border-white/10 md:hidden flex items-center justify-around h-16 pb-safe">
+        {user?.role === 'TENANT' ? (
+          <Link to="/tenant/recommendations" className={getTabClass('matches')}>
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.907c.961 0 1.36 1.246.588 1.81l-3.97 2.883a1 1 0 00-.364 1.118l1.52 4.674c.3.922-.755 1.688-1.538 1.118l-3.971-2.883a1 1 0 00-1.178 0l-3.97 2.883c-.783.57-1.838-.197-1.539-1.118l1.52-4.674a1 1 0 00-.364-1.118L2.05 10.1c-.773-.564-.373-1.81.588-1.81h4.907a1 1 0 00.95-.69l1.554-4.673z" />
+            </svg>
+            <span className="text-[9px] font-semibold mt-0.5">Matches</span>
+            {isTabActive('matches') && <span className="absolute bottom-1 w-1 h-1 rounded-full bg-primary-500 dark:bg-primary-400" />}
+          </Link>
+        ) : !user ? (
+          <Link to="/login" className={getTabClass('matches')}>
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.907c.961 0 1.36 1.246.588 1.81l-3.97 2.883a1 1 0 00-.364 1.118l1.52 4.674c.3.922-.755 1.688-1.538 1.118l-3.971-2.883a1 1 0 00-1.178 0l-3.97 2.883c-.783.57-1.838-.197-1.539-1.118l1.52-4.674a1 1 0 00-.364-1.118L2.05 10.1c-.773-.564-.373-1.81.588-1.81h4.907a1 1 0 00.95-.69l1.554-4.673z" />
+            </svg>
+            <span className="text-[9px] font-semibold mt-0.5">Matches</span>
+            {isTabActive('matches') && <span className="absolute bottom-1 w-1 h-1 rounded-full bg-primary-500 dark:bg-primary-400" />}
+          </Link>
+        ) : (
+          <Link to={dashboardLink} className={getTabClass('me')}>
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+            </svg>
+            <span className="text-[9px] font-semibold mt-0.5">Dashboard</span>
+            {isTabActive('me') && <span className="absolute bottom-1 w-1 h-1 rounded-full bg-primary-500 dark:bg-primary-400" />}
+          </Link>
+        )}
+
+        <Link to="/listings" className={getTabClass('browse')}>
+          <SearchIcon />
+          <span className="text-[9px] font-semibold mt-0.5">Browse</span>
+          {isTabActive('browse') && <span className="absolute bottom-1 w-1 h-1 rounded-full bg-primary-500 dark:bg-primary-400" />}
+        </Link>
+
+        {/* Interests Tab */}
+        {user?.role === 'TENANT' ? (
+          <Link to="/tenant/interests" className={getTabClass('interests')}>
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+            <span className="text-[9px] font-semibold mt-0.5">Interests</span>
+            {isTabActive('interests') && <span className="absolute bottom-1 w-1 h-1 rounded-full bg-primary-500 dark:bg-primary-400" />}
+          </Link>
+        ) : user?.role === 'OWNER' ? (
+          <Link to="/owner/interests" className={getTabClass('interests')}>
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+            <span className="text-[9px] font-semibold mt-0.5">Interests</span>
+            {isTabActive('interests') && <span className="absolute bottom-1 w-1 h-1 rounded-full bg-primary-500 dark:bg-primary-400" />}
+          </Link>
+        ) : !user ? (
+          <Link to="/login" className={getTabClass('interests')}>
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+            <span className="text-[9px] font-semibold mt-0.5">Interests</span>
+            {isTabActive('interests') && <span className="absolute bottom-1 w-1 h-1 rounded-full bg-primary-500 dark:bg-primary-400" />}
+          </Link>
+        ) : null}
+
+        {user?.role === 'OWNER' && (
+          <Link to="/owner/my-listings" className={getTabClass('me')}>
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span className="text-[9px] font-semibold mt-0.5">Post</span>
+            {isTabActive('me') && <span className="absolute bottom-1 w-1 h-1 rounded-full bg-primary-500 dark:bg-primary-400" />}
+          </Link>
+        )}
+
+        <Link to={user ? `/${user.role.toLowerCase()}/chat` : '/login'} className={getTabClass('chat')}>
+          <ChatIcon />
+          <span className="text-[9px] font-semibold mt-0.5">Chat</span>
+          {isTabActive('chat') && <span className="absolute bottom-1 w-1 h-1 rounded-full bg-primary-500 dark:bg-primary-400" />}
+        </Link>
+
+        <Link to={user ? dashboardLink : '/login'} className={getTabClass('me')}>
+          {user ? (
+            <div className={`w-5 h-5 rounded-full bg-primary-500 flex items-center justify-center text-[9px] font-bold text-white border transition-all duration-200 ${
+              isTabActive('me') ? 'border-primary-500 dark:border-primary-400 scale-110' : 'border-slate-200 dark:border-white/20'
+            }`}>
+              {initials}
+            </div>
+          ) : (
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+          )}
+          <span className="text-[9px] font-semibold mt-0.5">{user ? 'Me' : 'Sign In'}</span>
+          {isTabActive('me') && <span className="absolute bottom-1 w-1 h-1 rounded-full bg-primary-500 dark:bg-primary-400" />}
+        </Link>
+      </div>
     </>
   );
 };
