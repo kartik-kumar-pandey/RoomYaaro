@@ -15,6 +15,7 @@ import logger from './src/utils/logger.js';
 verifyEmailConnection();
 
 const app = express();
+app.set('trust proxy', 1);
 const httpServer = createServer(app);
 
 const io = new Server(httpServer, {

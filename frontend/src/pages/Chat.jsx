@@ -130,27 +130,27 @@ const Chat = () => {
           </div>
 
           {/* ── Message pane ── */}
-          <div className={`flex-1 flex flex-col min-w-0 bg-slate-900/10 ${!activeRoom ? 'hidden md:flex' : 'flex'}`}>
+          <div className={`flex-1 flex flex-col min-w-0 bg-slate-50 dark:bg-slate-900/10 ${!activeRoom ? 'hidden md:flex' : 'flex'}`}>
             {activeRoom ? (
               <>
                 {/* Header */}
-                <div className="px-5 py-4 border-b border-white/6 flex items-center justify-between flex-shrink-0">
+                <div className="px-5 py-4 border-b border-slate-200 dark:border-white/6 bg-white/80 dark:bg-slate-900/50 backdrop-blur-md flex items-center justify-between flex-shrink-0">
                   <div className="flex items-center gap-3">
                     <button 
                       onClick={() => setActiveRoom(null)} 
-                      className="md:hidden text-slate-400 hover:text-white p-1 mr-1 rounded-lg hover:bg-white/5"
+                      className="md:hidden text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white p-1 mr-1 rounded-lg hover:bg-slate-100 dark:hover:bg-white/5"
                     >
                       <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
                       </svg>
                     </button>
-                    <div className="w-10 h-10 rounded-xl bg-primary-500/20 flex items-center justify-center text-sm font-bold text-primary-400 border border-primary-500/15">
+                    <div className="w-10 h-10 rounded-xl bg-primary-500/10 dark:bg-primary-500/20 flex items-center justify-center text-sm font-bold text-primary-600 dark:text-primary-400 border border-primary-500/15">
                       {getRoomTitle(activeRoom).charAt(0).toUpperCase()}
                     </div>
                     <div>
-                      <p className="font-semibold text-white text-sm leading-snug">{getRoomTitle(activeRoom)}</p>
-                      <p className="text-[10px] text-emerald-400 flex items-center gap-1 mt-0.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      <p className="font-semibold text-slate-800 dark:text-white text-sm leading-snug">{getRoomTitle(activeRoom)}</p>
+                      <p className="text-[10px] text-emerald-500 dark:text-emerald-400 flex items-center gap-1 mt-0.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" />
                         Online
                       </p>
                     </div>
@@ -158,7 +158,7 @@ const Chat = () => {
                 </div>
 
                 {/* Messages */}
-                <div className="flex-1 overflow-y-auto p-5 space-y-4 bg-slate-950/20">
+                <div className="flex-1 overflow-y-auto p-5 space-y-4 bg-slate-100/30 dark:bg-slate-950/20">
                   {messages.map((msg, i) => {
                     const isMine = msg.senderId === user.id;
                     return (
@@ -167,16 +167,16 @@ const Chat = () => {
                         className={`flex ${isMine ? 'justify-end' : 'justify-start'} msg-enter`}
                         style={{ animationDelay: msg._new ? '0ms' : `${Math.min(i * 20, 200)}ms` }}
                       >
-                        <div className={`max-w-[85%] sm:max-w-xs lg:max-w-sm px-4 py-3 rounded-2xl text-sm shadow-sm ${
+                        <div className={`max-w-[85%] sm:max-w-xs lg:max-w-sm px-4 py-3 rounded-2xl text-sm shadow-sm transition-all ${
                           isMine
-                            ? 'bg-primary-500 text-white rounded-br-none'
-                            : 'glass text-slate-200 rounded-bl-none border border-white/8'
+                            ? 'bg-gradient-to-tr from-primary-600 to-indigo-500 text-white rounded-br-none shadow-md shadow-primary-500/10'
+                            : 'bg-white dark:bg-white/5 text-slate-800 dark:text-slate-200 rounded-bl-none border border-slate-200/80 dark:border-white/8 shadow-sm'
                         }`}>
                           {!isMine && msg.sender?.name && (
                             <p className="text-[10px] font-bold mb-1 opacity-60 tracking-wide uppercase">{msg.sender.name}</p>
                           )}
                           <p className="leading-relaxed break-words">{msg.content}</p>
-                          <p className={`text-[10px] text-right mt-1.5 ${isMine ? 'text-primary-200/80' : 'text-slate-500'}`}>
+                          <p className={`text-[10px] text-right mt-1.5 ${isMine ? 'text-white/70' : 'text-slate-400 dark:text-slate-500'}`}>
                             {formatTime(msg.createdAt)}
                           </p>
                         </div>
@@ -187,10 +187,10 @@ const Chat = () => {
                 </div>
 
                 {/* Input */}
-                <form onSubmit={sendMessage} className="p-4 border-t border-white/6 bg-slate-950/10 flex gap-3 flex-shrink-0">
+                <form onSubmit={sendMessage} className="p-4 border-t border-slate-200 dark:border-white/6 bg-white/80 dark:bg-slate-950/10 flex gap-3 flex-shrink-0">
                   <input
                     ref={inputRef}
-                    className="input-field flex-1"
+                    className="input-field flex-1 bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-white/8"
                     placeholder="Type a message…"
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
@@ -198,7 +198,7 @@ const Chat = () => {
                   />
                   <button
                     type="submit"
-                    className="btn-primary w-11 h-11 p-0 flex items-center justify-center flex-shrink-0"
+                    className="btn-primary w-11 h-11 p-0 flex items-center justify-center flex-shrink-0 bg-gradient-to-r from-primary-600 to-indigo-500 hover:from-primary-700 hover:to-indigo-600 active:from-primary-800 active:to-indigo-700 shadow-md shadow-primary-500/10"
                     disabled={!newMessage.trim() || sending}
                   >
                     <SendIcon />
