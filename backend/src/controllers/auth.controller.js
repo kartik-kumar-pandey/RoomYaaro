@@ -74,7 +74,7 @@ export const register = asyncHandler(async (req, res) => {
 
   // Send verification email (non-blocking on failure)
   try {
-    await sendVerificationEmail(user, rawToken);
+    sendVerificationEmail(user, rawToken);
   } catch (emailErr) {
     logger.warn('Failed to send verification email after register', { userId: user.id, error: emailErr.message });
   }
@@ -152,7 +152,7 @@ export const resendVerification = asyncHandler(async (req, res) => {
   });
 
   try {
-    await sendVerificationEmail(user, rawToken);
+    sendVerificationEmail(user, rawToken);
   } catch (emailErr) {
     logger.warn('Failed to resend verification email', { userId: user.id, error: emailErr.message });
   }
@@ -245,7 +245,7 @@ export const forgotPassword = asyncHandler(async (req, res) => {
   });
 
   try {
-    await sendPasswordResetEmail(user, rawToken);
+    sendPasswordResetEmail(user, rawToken);
   } catch (emailErr) {
     logger.warn('Failed to send password reset email', { userId: user.id, error: emailErr.message });
   }

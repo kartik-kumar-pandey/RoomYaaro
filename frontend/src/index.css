@@ -115,15 +115,16 @@ html.light {
   /* Buttons */
   .btn-primary {
     @apply relative inline-flex items-center justify-center gap-2
-           bg-indigo-500
+           bg-gradient-to-r from-primary-600 to-indigo-600
            text-white font-semibold py-2.5 px-5 rounded-xl
            transition-all duration-200
-           disabled:opacity-40 disabled:cursor-not-allowed;
-    box-shadow: 0 0 0 0 rgba(99,102,241,0);
+           disabled:opacity-40 disabled:cursor-not-allowed
+           shadow-md shadow-indigo-500/15;
+    color: #ffffff !important;
   }
   .btn-primary:hover:not(:disabled) {
-    @apply bg-indigo-400;
-    box-shadow: 0 0 24px rgba(99,102,241,.45);
+    @apply from-primary-500 to-indigo-500;
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.35);
     transform: translateY(-1px);
   }
   .btn-primary:active:not(:disabled) { transform: translateY(0); }
