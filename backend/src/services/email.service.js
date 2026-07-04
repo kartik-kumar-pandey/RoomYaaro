@@ -88,13 +88,66 @@ const sendEmail = async ({
           !pass.includes('your-app-password');
 
         if (isSMTPConfigured) {
+            // Check if it's a Brevo API Key (starts with xsmtpsib-)
+            if (pass.startsWith('xsmtpsib-')) {
+                console.log(`ℹ️ Brevo SMTP API Key detected. Trying to send via HTTP API (port 443)...`);
+                
+                try {
+                    // Parse sender details
+                    let senderName = "RoomYaaro";
+                    let senderEmail = "roomyaaro@gmail.com";
+                    const emailFrom = process.env.EMAIL_FROM;
+                    if (emailFrom) {
+                        const match = emailFrom.match(/^(?:"?([^"<]+)"?\s)?<?([^>]+)>?$/);
+                        if (match) {
+                            senderName = match[1]?.trim() || "RoomYaaro";
+                            senderEmail = match[2]?.trim() || "roomyaaro@gmail.com";
+                        }
+                    }
+
+                    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+                        method: 'POST',
+                        headers: {
+                            'accept': 'application/json',
+                            'api-key': pass,
+                            'content-type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            sender: { name: senderName, email: senderEmail },
+                            to: [{ email: to }],
+                            subject: subject,
+                            htmlContent: html
+                        })
+                    });
+
+                    if (!response.ok) {
+                        const errBody = await response.text();
+                        throw new Error(`Brevo HTTP API failed: ${response.status} ${errBody}`);
+                    }
+
+                    const resData = await response.json();
+                    console.log(`✅ Email sent via Brevo HTTP API to ${to}:`, resData);
+
+                    if (notification) {
+                        await prisma.emailNotification.update({
+                            where: { id: notification.id },
+                            data: { isSent: true, sentAt: new Date() },
+                        });
+                    }
+                    return resData;
+                } catch (httpErr) {
+                    console.warn(`⚠️ Brevo HTTP API failed (${httpErr.message}). Falling back to standard SMTP Relay...`);
+                }
+            }
+
+            // Otherwise, fall back to standard SMTP (useful for other providers or local relays)
             const info = await transporter.sendMail({
                 from: process.env.EMAIL_FROM,
                 to,
                 subject,
                 html,
             });
-            console.log(`✅ Email sent to ${to}`);
+            console.log(`✅ Email sent to ${to} via SMTP`);
 
             if (notification) {
                 await prisma.emailNotification.update({
@@ -109,7 +162,7 @@ const sendEmail = async ({
         }
     } catch (error) {
         console.error("❌ Email Sending Failed");
-        console.error(error);
+        console.error(error.message || error);
         throw error;
     }
 };

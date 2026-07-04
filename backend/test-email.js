@@ -19,7 +19,7 @@ async function testNewTemplates() {
   console.log("Sending new premium template test emails...");
   try {
     await sendHighMatchEmail({
-      ownerEmail: "roomyaaro@gmail.com",
+      ownerEmail: "kartikpandey9737@gmail.com",
       ownerName: "Rahul Kumar",
       tenantName: "Aarav Sharma",
       compatibilityScore: 93,
@@ -30,7 +30,7 @@ async function testNewTemplates() {
     console.log("✅ High Match Email Sent");
 
     await sendInterestAcceptedEmail({
-      tenantEmail: "roomyaaro@gmail.com",
+      tenantEmail: "kartikpandey9737@gmail.com",
       tenantName: "Aarav Sharma",
       ownerName: "Rahul Kumar",
       listing,
@@ -39,7 +39,7 @@ async function testNewTemplates() {
     console.log("✅ Interest Accepted Email Sent");
 
     await sendInterestRejectedEmail({
-      tenantEmail: "roomyaaro@gmail.com",
+      tenantEmail: "kartikpandey9737@gmail.com",
       tenantName: "Aarav Sharma",
       listing,
       actionUrl: "http://localhost:5173/tenant/listings",
